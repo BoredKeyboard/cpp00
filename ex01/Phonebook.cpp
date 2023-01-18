@@ -75,7 +75,7 @@ int	main(int argc, char ** argv)
 	Contact		contacts[8];
 	int			added = 0;
 	bool		is_empty = true;
-	int			entry;
+	int			entry = -1;
 
 	while (i < 8)
 	{
@@ -83,10 +83,10 @@ int	main(int argc, char ** argv)
 		std::cout << "Choose an option for the phonebook: ADD, SEARCH or EXIT: ";
 		std::getline(std::cin, input);
 		if (input == "ADD") {
-			get_info("Enter first name	: ", contacts[i].first_name);
-			get_info("Enter last name		: ", contacts[i].last_name);
-			get_info("Enter nickname		: ", contacts[i].nickname);
-			get_info("Enter phone number	: ", contacts[i].phone_nbr);
+			get_info("Enter first name        : ", contacts[i].first_name);
+			get_info("Enter last name         : ", contacts[i].last_name);
+			get_info("Enter nickname          : ", contacts[i].nickname);
+			get_info("Enter phone number      : ", contacts[i].phone_nbr);
 			get_info("Tell your darkest secret: ", contacts[i].secret);
 			i++;
 			if (added != 8)
@@ -109,13 +109,31 @@ int	main(int argc, char ** argv)
 				std::cout << " ‾‾‾‾‾‾‾‾‾‾ ‾‾‾‾‾‾‾‾‾‾ ‾‾‾‾‾‾‾‾‾‾ ‾‾‾‾‾‾‾‾‾‾ " << std::endl;
 				std::cout << "Enter index of entry: ";
 				std::getline(std::cin, input);
-				entry = std::stoi(input);
-				if (entry >= 0 && entry < 8) {
-					std::cout << "First name	: " << contacts[entry].first_name << std::endl;
-					std::cout << "Last name	: " << contacts[entry].last_name << std::endl;
-					std::cout << "Nickname	: " << contacts[entry].nickname << std::endl;
-					std::cout << "Phone number	: " << contacts[entry].phone_nbr << std::endl;
-					std::cout << "Darkest secret	: " << contacts[entry].secret << std::endl;
+				
+				bool	str_err = false;
+
+				try {
+					std::stoi(input);
+				}
+				catch(std::invalid_argument) {
+					std::cout << "Invalid argument" << std::endl;
+					str_err = true;
+				}
+				catch(std::out_of_range) {
+					std::cout << "Argument out of range" << std::endl;
+					str_err = true;
+				}
+				if (str_err != true) {
+					entry = std::stoi(input);
+					if (entry >= 0 && entry < 8 && (contacts[entry].first_name != "" || check_empty(contacts[entry].first_name) == EXIT_SUCCESS)) {
+						std::cout << "First name    : " << contacts[entry].first_name << std::endl;
+						std::cout << "Last name     : " << contacts[entry].last_name << std::endl;
+						std::cout << "Nickname      : " << contacts[entry].nickname << std::endl;
+						std::cout << "Phone number  : " << contacts[entry].phone_nbr << std::endl;
+						std::cout << "Darkest secret: " << contacts[entry].secret << std::endl;
+					}
+					else
+						std::cout << "Index out of range of phonebook" << std::endl;
 				}
 			}
 		}
