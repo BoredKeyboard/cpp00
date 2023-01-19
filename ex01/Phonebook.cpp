@@ -13,25 +13,8 @@ class Contact
 		std::string	nickname;
 		std::string	phone_nbr;
 		std::string	secret;
-	// ~Contact();
+		void	init_info();
 };
-
-// class PhoneBook
-// {
-// 	private:
-// 		/* data */
-// 	public:
-// 		PhoneBook(/* args */);
-// 	~PhoneBook();
-// };
-
-// PhoneBook::PhoneBook(/* args */)
-// {
-// }
-
-// PhoneBook::~PhoneBook()
-// {
-// }
 
 int	check_empty(std::string str)
 {
@@ -60,6 +43,37 @@ void	get_info(std::string msg, std::string& field)
 	}
 }
 
+void Contact::init_info(void)
+{
+	get_info("Enter first name        : ", this->first_name);
+	get_info("Enter last name         : ", this->last_name);
+	get_info("Enter nickname          : ", this->nickname);
+	get_info("Enter phone number      : ", this->phone_nbr);
+	get_info("Tell your darkest secret: ", this->secret);
+}
+
+class Phonebook
+{
+	public:
+		Phonebook();
+		Contact contacts[8];
+		bool	run_phonebook(std::string input);
+
+	private:
+		void	_add_contact();
+		void	_search_contact();
+		int 	_i;
+		int		_entry;
+		int		_added;
+};
+
+Phonebook::Phonebook(void)
+{
+	this->_i = 0;
+	this->_entry = -1;
+	this->_added = 0;
+}
+
 std::string	truncate(std::string str, int width)
 {
 	if (str.length() > width)
@@ -67,78 +81,75 @@ std::string	truncate(std::string str, int width)
 	return (str);
 }
 
+void Phonebook::_add_contact(void)
+{
+	this->contacts[this->_i].init_info();
+	this->_i++;
+	if (this->_added != 8)
+		this->_added++;
+	if (this->_i == 8)
+		this->_i = 0;
+}
+
+void Phonebook::_search_contact(void)
+{
+	std::string	input;
+
+	if (this->_added == 0)
+		std::cout << "Phonebook empty. Please add contacts" << std::endl;
+	else {
+		std::cout << " __________ __________ __________ __________ " << std::endl;
+		std::cout << "|     index|first name| last name| nick name|" << std::endl;
+		for (int j = 0; j < this->_added; j++) {
+			std::cout << "|" << std::right << std::setw(10) << truncate(std::to_string(j), 10);
+			std::cout << "|" << std::right << std::setw(10) << truncate(this->contacts[j].first_name, 10);
+			std::cout << "|" << std::right << std::setw(10) << truncate(this->contacts[j].last_name, 10);
+			std::cout << "|" << std::right << std::setw(10) << truncate(this->contacts[j].nickname, 10);
+			std::cout << "|" << std::endl;
+		}
+		std::cout << " ‾‾‾‾‾‾‾‾‾‾ ‾‾‾‾‾‾‾‾‾‾ ‾‾‾‾‾‾‾‾‾‾ ‾‾‾‾‾‾‾‾‾‾ " << std::endl;
+		std::cout << "Enter index of entry: ";
+		std::getline(std::cin, input);
+		
+		std::stringstream ss(input);
+		ss >> this->_entry;
+		if (ss.eof() == true && this->_entry >= 0 && this->_entry < 8
+			&& (this->contacts[this->_entry].first_name != "" && check_empty(this->contacts[this->_entry].first_name) != EXIT_SUCCESS)) {
+			std::cout << "First name    : " << this->contacts[this->_entry].first_name << std::endl;
+			std::cout << "Last name     : " << this->contacts[this->_entry].last_name << std::endl;
+			std::cout << "Nickname      : " << this->contacts[this->_entry].nickname << std::endl;
+			std::cout << "Phone number  : " << this->contacts[this->_entry].phone_nbr << std::endl;
+			std::cout << "Darkest secret: " << this->contacts[this->_entry].secret << std::endl;
+		}
+		else if (ss.eof() == false)
+			std::cout << "Invalid argument" << std::endl;
+		else
+			std::cout << "Index out of range of phonebook" << std::endl;
+	}
+}
+
+bool Phonebook::run_phonebook(std::string input)
+{
+	if (input == "ADD")
+		this->_add_contact();
+	else if (input == "SEARCH")
+		this->_search_contact();
+	else if (input == "EXIT")
+		return (true);
+	return (false);
+}
+
 int	main(int argc, char ** argv)
 {
-	int 		i = 0;
+	Phonebook	phonebook;
 	std::string	input;
-	std::string	info;
-	Contact		contacts[8];
-	int			added = 0;
-	bool		is_empty = true;
-	int			entry = -1;
 
-	while (i < 8)
+	while (true)
 	{
-		input = "zero";
 		std::cout << "Choose an option for the phonebook: ADD, SEARCH or EXIT: ";
 		std::getline(std::cin, input);
-		if (input == "ADD") {
-			get_info("Enter first name        : ", contacts[i].first_name);
-			get_info("Enter last name         : ", contacts[i].last_name);
-			get_info("Enter nickname          : ", contacts[i].nickname);
-			get_info("Enter phone number      : ", contacts[i].phone_nbr);
-			get_info("Tell your darkest secret: ", contacts[i].secret);
-			i++;
-			if (added != 8)
-				added++;
-			if (i == 8)
-				i = 0;
-		}
-		else if (input == "SEARCH") {
-			if (added == 0)
-				std::cout << "Phonebook empty. Please add contacts" << std::endl;
-			else {
-				std::cout << " __________ __________ __________ __________ " << std::endl;
-				for (int j = 0; j < added; j++) {
-					std::cout << "|" << std::right << std::setw(10) << truncate(std::to_string(j), 10);
-					std::cout << "|" << std::right << std::setw(10) << truncate(contacts[j].first_name, 10);
-					std::cout << "|" << std::right << std::setw(10) << truncate(contacts[j].last_name, 10);
-					std::cout << "|" << std::right << std::setw(10) << truncate(contacts[j].nickname, 10);
-					std::cout << "|" << std::endl;
-				}
-				std::cout << " ‾‾‾‾‾‾‾‾‾‾ ‾‾‾‾‾‾‾‾‾‾ ‾‾‾‾‾‾‾‾‾‾ ‾‾‾‾‾‾‾‾‾‾ " << std::endl;
-				std::cout << "Enter index of entry: ";
-				std::getline(std::cin, input);
-				
-				bool	str_err = false;
-
-				try {
-					std::stoi(input);
-				}
-				catch(std::invalid_argument) {
-					std::cout << "Invalid argument" << std::endl;
-					str_err = true;
-				}
-				catch(std::out_of_range) {
-					std::cout << "Argument out of range" << std::endl;
-					str_err = true;
-				}
-				if (str_err != true) {
-					entry = std::stoi(input);
-					if (entry >= 0 && entry < 8 && (contacts[entry].first_name != "" || check_empty(contacts[entry].first_name) == EXIT_SUCCESS)) {
-						std::cout << "First name    : " << contacts[entry].first_name << std::endl;
-						std::cout << "Last name     : " << contacts[entry].last_name << std::endl;
-						std::cout << "Nickname      : " << contacts[entry].nickname << std::endl;
-						std::cout << "Phone number  : " << contacts[entry].phone_nbr << std::endl;
-						std::cout << "Darkest secret: " << contacts[entry].secret << std::endl;
-					}
-					else
-						std::cout << "Index out of range of phonebook" << std::endl;
-				}
-			}
-		}
-		else if (input == "EXIT")
-			exit(EXIT_SUCCESS);
+		if (phonebook.run_phonebook(input) == true)
+			return (EXIT_SUCCESS);
 	}
 	return (EXIT_FAILURE);
 }
