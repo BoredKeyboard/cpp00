@@ -6,7 +6,7 @@
 /*   By: mforstho <mforstho@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/01/23 14:59:31 by mforstho      #+#    #+#                 */
-/*   Updated: 2023/01/23 15:22:09 by mforstho      ########   odam.nl         */
+/*   Updated: 2023/01/31 11:06:04 by mforstho      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,11 @@ void Phonebook::_search_contact(void)
 		this->_entry = -1;
 		std::cout << "Enter index of entry: ";
 		std::getline(std::cin, input);
-		
 		std::stringstream ss(input);
 		ss >> this->_entry;
-		if (ss.eof() == true && this->_entry >= 0 && this->_entry < 8
+		if (input == "" || check_empty(input) == EXIT_SUCCESS || ss.eof() == false)
+			std::cout << "Invalid argument" << std::endl;
+		else if (ss.eof() == true && this->_entry >= 0 && this->_entry < 8
 			&& (this->contacts[this->_entry].get_first_name() != "" && check_empty(this->contacts[this->_entry].get_first_name()) != EXIT_SUCCESS)) {
 			std::cout << "First name    : " << this->contacts[this->_entry].get_first_name() << std::endl;
 			std::cout << "Last name     : " << this->contacts[this->_entry].get_last_name() << std::endl;
@@ -67,8 +68,6 @@ void Phonebook::_search_contact(void)
 			std::cout << "Phone number  : " << this->contacts[this->_entry].get_phone_nbr() << std::endl;
 			std::cout << "Darkest secret: " << this->contacts[this->_entry].get_secret() << std::endl;
 		}
-		else if (ss.eof() == false)
-			std::cout << "Invalid argument" << std::endl;
 		else
 			std::cout << "Index out of range of phonebook" << std::endl;
 	}

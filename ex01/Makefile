@@ -6,11 +6,11 @@
 #    By: mforstho <mforstho@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/01/23 14:46:36 by mforstho      #+#    #+#                  #
-#    Updated: 2023/01/23 15:09:47 by mforstho      ########   odam.nl          #
+#    Updated: 2023/01/31 11:14:01 by mforstho      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
-NAME := a.out
+NAME := phonebook
 CC := c++
 CFLAGS ?= -Wextra -Wall -Werror -std=c++98 -pedantic
 
