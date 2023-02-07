@@ -6,7 +6,7 @@
 /*   By: mforstho <mforstho@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/01/23 14:59:31 by mforstho      #+#    #+#                 */
-/*   Updated: 2023/01/31 11:06:04 by mforstho      ########   odam.nl         */
+/*   Updated: 2023/02/07 13:15:25 by mforstho      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ void Phonebook::_search_contact(void)
 		this->_entry = -1;
 		std::cout << "Enter index of entry: ";
 		std::getline(std::cin, input);
+		if (std::cin.eof())
+			return ;
 		std::stringstream ss(input);
 		ss >> this->_entry;
 		if (input == "" || check_empty(input) == EXIT_SUCCESS || ss.eof() == false)
@@ -91,10 +93,14 @@ int	main(void)
 
 	while (true)
 	{
+		if (std::cin.eof())
+			break ;
 		std::cout << "Choose an option for the phonebook: ADD, SEARCH or EXIT: ";
 		std::getline(std::cin, input);
+		if (std::cin.eof())
+			break ;
 		if (phonebook.run_phonebook(input) == true)
 			return (EXIT_SUCCESS);
 	}
-	return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }

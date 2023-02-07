@@ -6,7 +6,7 @@
 /*   By: mforstho <mforstho@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/01/23 14:50:59 by mforstho      #+#    #+#                 */
-/*   Updated: 2023/01/23 15:16:48 by mforstho      ########   odam.nl         */
+/*   Updated: 2023/02/07 13:15:18 by mforstho      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,13 @@ void	get_info(std::string msg, std::string& field)
 {
 	std::string	info;
 
+	if (std::cin.eof())
+		return ;
 	while (true) {
 		std::cout << msg;
 		std::getline(std::cin, info);
+		if (std::cin.eof())
+			break ;
 		if (info != "" && check_empty(info) != 0) {
 			field = info;
 			return ;
